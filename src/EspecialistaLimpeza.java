@@ -1,3 +1,4 @@
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,16 @@ public class EspecialistaLimpeza extends Operador {
      * há no máximo TEMPO_BONUS dias (diasAposFinalizacao entre 0 e TEMPO_BONUS, inclusive).
      */
     private double valorBonus() {
+        double bonusAcumulado = 0;
+        double valorBase = BONUS*SALARIO;
+        for (LoteDados l : lotes){
+            int dias = l.diasAposFinalizacao();
+            if (dias >= 0 && dias <= TEMPO_BONUS){
+                bonusAcumulado+=valorBase;
+            }
+        }   
         // TODO: percorrer lotes e acumular o bônus dos elegíveis
-        return 0.0;
+        return bonusAcumulado;
     }
 
     public int alocarLote(LoteDados lote) {
@@ -33,7 +42,10 @@ public class EspecialistaLimpeza extends Operador {
     @Override
     public double registrarPagamento() {
         // TODO: calcular total, armazenar em ultimoPagamento e devolver
-        return 0.0;
+        double pagamento = valorBonus();
+        pagamento+=SALARIO;
+        ultimoPagamento=pagamento;
+        return ultimoPagamento;
     }
 
     @Override
